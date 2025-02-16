@@ -8,6 +8,7 @@ async function preload() {
   mClient = await Gradio.Client.connect("5020A/5020-Gradio");
 }
 
+let mDiv;
 let mColor;
 let mSlider;
 let mButton;
@@ -17,16 +18,20 @@ function setup() {
   mImgIn.resize(0, height / 2);
   mImgIn.loadPixels();
 
+  mDiv = createDiv("Click on image to select a color");
+  mDiv.position(mImgIn.width + 10, 10);
+  mDiv.size(220, 40);
+
   mColor = createColorPicker("#ffdf00");
-  mColor.position(mImgIn.width + 10, 10);
+  mColor.position(mImgIn.width + 10, 40);
   mColor.size(200, 40);
 
   mSlider = createSlider(0, 255, 100, 5);
-  mSlider.position(mImgIn.width + 10, 60);
+  mSlider.position(mImgIn.width + 10, 100);
   mSlider.size(200, 20);
 
   mButton = createButton("Filter");
-  mButton.position(mImgIn.width + 10, 100);
+  mButton.position(mImgIn.width + 10, 140);
   mButton.size(200, 40);
   mButton.mouseReleased(filterImage);
 }
