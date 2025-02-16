@@ -1,9 +1,11 @@
+let mClient;
 let mImgIn;
 let mImgOut;
 
 async function preload() {
   mImgIn = loadImage("https://raw.githubusercontent.com/PSAM-5020-2025S-A/5020-Gradio/refs/heads/main/imgs/arara.jpg");
-  mClient = await Client.connect("5020A/5020-Gradio");
+  let Gradio = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
+  mClient = await Gradio.Client.connect("5020A/5020-Gradio");
 }
 
 let mColor;
@@ -13,6 +15,7 @@ let mButton;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   mImgIn.resize(0, height / 2);
+  mImgIn.loadPixels();
 
   mColor = createColorPicker("#ffdf00");
   mColor.position(mImgIn.width + 10, 10);
@@ -51,4 +54,16 @@ async function runFilter(imgBlob) {
 
   let filterRes = await mClient.predict("/predict", inputs);
   mImgOut = loadImage(filterRes.data[0].url);
+}
+
+function mouseReleased() {
+  if (mouseX > mImgIn.width || mouseY > mImgIn.height) return;
+
+  let imgIdx = 4 * (mouseY * mImgIn.width + mouseX);
+
+  let pxColor = "#";
+  for (let c = 0; c < 3; c += 1) {
+    pxColor += `00${(mImgIn.pixels[imgIdx + c]).toString(16)}`.slice(-2);
+  }
+  mColor.value(pxColor);
 }
