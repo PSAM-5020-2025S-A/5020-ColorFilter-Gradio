@@ -2,7 +2,7 @@ let mImgIn;
 let mImgOut;
 
 async function preload() {
-  mImgIn = loadImage("../imgs/arara.jpg");
+  mImgIn = loadImage("https://raw.githubusercontent.com/PSAM-5020-2025S-A/5020-Gradio/refs/heads/main/imgs/arara.jpg");
   mClient = await Client.connect("5020A/5020-Gradio");
 }
 
