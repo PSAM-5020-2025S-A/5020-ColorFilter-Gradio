@@ -1,8 +1,11 @@
 import gradio as gr
 
+# Euclidean distance between 2 RGB color tuples
 def color_distance(c0, c1):
   return ((c0[0] - c1[0])**2 + (c0[1] - c1[1])**2 + (c0[2] - c1[2])**2) ** 0.5
 
+# Turns a color hex string in the form `#12AB56`
+#   into an RGB tuple (18, 171, 87)
 def hex_string_to_rgb(hex_str):
   return (
     int(hex_str[1:3], 16),
