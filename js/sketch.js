@@ -8,32 +8,57 @@ async function preload() {
   mClient = await Gradio.Client.connect("5020A/5020-ColorFilter-Gradio");
 }
 
+let mFileInput;
+let mLoadButton;
 let mDiv;
 let mColor;
 let mSlider;
-let mButton;
+let mFilterButton;
+
+function positionInterface(img) {
+  mFileInput.hide();
+  mLoadButton.position(img.width + 10, 10);
+  mDiv.position(img.width + 10, 60);
+  mColor.position(img.width + 10, 90);
+  mSlider.position(img.width + 10, 150);
+  mFilterButton.position(img.width + 10, 190);
+}
+
+function loadNewImage(file) {
+  if (file.type === 'image') {
+    loadImage(file.data, (img) => {
+      mImgIn = img;
+      mImgIn.resize(0, height / 2);
+      mImgIn.loadPixels();
+      positionInterface(mImgIn);
+    });
+  }
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   mImgIn.resize(0, height / 2);
   mImgIn.loadPixels();
 
+  mFileInput = createFileInput(loadNewImage);
+  mLoadButton = createButton("load new image");
+  mLoadButton.size(200, 40);
+  mLoadButton.mouseReleased(() => mFileInput.elt.click());
+
   mDiv = createDiv("Click on image to select a color");
-  mDiv.position(mImgIn.width + 10, 10);
   mDiv.size(220, 40);
 
   mColor = createColorPicker("#ffdf00");
-  mColor.position(mImgIn.width + 10, 40);
   mColor.size(200, 40);
 
   mSlider = createSlider(0, 255, 100, 5);
-  mSlider.position(mImgIn.width + 10, 100);
   mSlider.size(200, 20);
 
-  mButton = createButton("Filter");
-  mButton.position(mImgIn.width + 10, 140);
-  mButton.size(200, 40);
-  mButton.mouseReleased(filterImage);
+  mFilterButton = createButton("run filter");
+  mFilterButton.size(200, 40);
+  mFilterButton.mouseReleased(filterImage);
+
+  positionInterface(mImgIn);
 }
 
 function draw() {
