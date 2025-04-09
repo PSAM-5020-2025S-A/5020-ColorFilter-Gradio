@@ -3,7 +3,7 @@ let mImgIn;
 let mImgOut;
 
 async function preload() {
-  mImgIn = loadImage("https://raw.githubusercontent.com/PSAM-5020-2025S-A/5020-ColorFilter-Gradio/refs/heads/main/imgs/arara.jpg");
+  mImgIn = loadImage("../imgs/arara.jpg");
   let Gradio = await import("https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js");
   mClient = await Gradio.Client.connect("5020A/5020-ColorFilter-Gradio");
 }
@@ -78,7 +78,7 @@ function filterImage() {
 async function runFilter(imgBlob) {
   let inputs = {
     img: imgBlob,
-    keep_color_str: mColor.value(),
+    keep_color_in: mColor.value(),
     threshold: mSlider.value()
   }
 
