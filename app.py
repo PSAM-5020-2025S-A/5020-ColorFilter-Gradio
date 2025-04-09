@@ -1,25 +1,20 @@
-import re
 import gradio as gr
-
-COLOR_PATTERN = r"([^(]+)\(([0-9.]+), ?([0-9.]+%?), ?([0-9.]+%?)(, ?([0-9.]+))?\)"
+import re
 
 # Euclidean distance between 2 RGB color tuples
 def color_distance(c0, c1):
   return ((c0[0] - c1[0])**2 + (c0[1] - c1[1])**2 + (c0[2] - c1[2])**2) ** 0.5
 
-# Turns a color hex string in the form `#12AB56`
+# Turns a css color string in the form `#12AB56` or
+#                                      `rgb(18, 171, 87)` or
+#                                      `rgba(18, 171, 87, 1)`
 #   into an RGB list [18, 171, 87]
-def hex_string_to_rgb(hex_str):
-  return [
-    int(hex_str[1:3], 16),
-    int(hex_str[3:5], 16),
-    int(hex_str[5:7], 16),
-  ]
+def css_to_rgb(css_str):
+  if css_str[0] == "#":
+    return [int(css_str[i:i+2], 16) for i in range(1,6,2)]
 
-# Turns a css color string in the form rgb(18, 171, 87) or rgba(18, 171, 87, 1)
-#   into an RGB list [18, 171, 87]
-def css_to_rgb(css):
-  match = re.match(COLOR_PATTERN, css)
+  COLOR_PATTERN = r"([^(]+)\(([0-9.]+), ?([0-9.]+%?), ?([0-9.]+%?)(, ?([0-9.]+))?\)"
+  match = re.match(COLOR_PATTERN, css_str)
   if not match:
     return [0,0,0]
 
@@ -30,11 +25,8 @@ def css_to_rgb(css):
     print("hsl not supported")
     return [0,0,0]
 
-def highlight_color(img, keep_color_in, threshold):
-  if keep_color_in[0] == "#":
-    keep_color = hex_string_to_rgb(keep_color_in)
-  else:
-    keep_color = css_to_rgb(keep_color_in)
+def highlight_color(img, keep_color_str, threshold):
+  keep_color = css_to_rgb(keep_color_str)
 
   filtpxs = []
   for r,g,b in img.getdata():
